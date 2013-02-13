@@ -1,0 +1,136 @@
+#bottomPanel {
+    color: #ffffff;
+    background-color: black;
+    border-image: url("bottom-panel-border.svg") 1;
+    font-size: 10.5pt;
+    height: 1.86em;
+}
+
+.message-button {
+    min-width: 2.5em;
+    font-weight: bold;
+    color: #ccc;
+    transition-duration: 100;
+}
+
+.message-button:hover {
+    color: white;
+    text-shadow: black 0px 2px 2px;
+}
+
+.bottom-panel {
+    spacing: 6px;
+}
+
+.workspace-switcher {
+    spacing: 3px;
+}
+
+.workspace-button {
+    min-width: 2.5em;
+    font-weight: bold;
+    color: #ccc;
+    transition-duration: 100;
+    border: 1px;
+    border-color: #ccc;
+    padding: 2px;
+}
+
+.workspace-button:outlined {
+    padding: 1px;
+    border: 2px solid white;
+    background: #222;
+}
+
+.workspace-row-indicator {
+    width: 1.2em;
+    -active-color: #fff;
+    -inactive-color: #888;
+}
+
+.workspace-button:hover {
+    color: white;
+    text-shadow: black 0px 2px 2px;
+}
+
+.window-list-box {
+    spacing: 6px;
+}
+
+.window-list-item-box {
+    spacing: 3px;
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: #bbb;
+    color: #bbb;
+    padding: 0px 2px;
+}
+
+.window-list-item-box:focused {
+    color: white;
+    background: #282828;
+}
+
+.window-list-item-label {
+    font-weight: bold;
+    width: 15em;
+    min-width: 5px;
+}
+
+.bottom-panel-tooltip {
+    border-radius: 7px;
+    padding: 4px 12px;
+    background-color: rgba(0,0,0,0.9);
+    text-align: center;
+    color: white;
+    font-size: 9pt;
+    font-weight: bold;
+    -y-offset: 4px;
+}
+
+.workspace-dialog-label {
+    font-size: 9pt;
+    color: white;
+}
+
+.workspace-dialog-error-label {
+    font-size: 9pt;
+    color: white;
+}
+
+.workspace-dialog-error-box {
+    padding-top: 15px;
+    spacing: 5px;
+}
+
+.workspace-dialog-entry {
+    font-size: 10.5pt;
+    font-weight: bold;
+    width: 23em;
+    color: white;
+}
+
+.workspace-dialog {
+    border-radius: 16px;
+
+    padding-right: 21px;
+    padding-left: 21px;
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
+
+.ws-switcher-active-left {
+    height: 100px;
+    border: 0px;
+    background: rgba(255,255,255,0.5);
+    background-image: url("ws-switch-arrow-left.svg");
+    border-radius: 8px;
+}
+
+.ws-switcher-active-right {
+    height: 100px;
+    border: 0px;
+    background: rgba(255,255,255,0.5);
+    background-image: url("ws-switch-arrow-right.svg");
+    border-radius: 8px;
+}

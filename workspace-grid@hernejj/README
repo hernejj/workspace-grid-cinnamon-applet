@@ -1,0 +1,60 @@
+Workspace grid (2D) and switcher  v0.1
+========================================
+2D workspace grid and switcher for Cinnamon Desktop Environment
+
+Author:   Jason J. Herne  (hernejj@gmail.com)
+Homepage: http://github.com/hernejj/workspace-grid-cinnamon-applet
+
+Description
+-------------
+This is a Cinnamon applet that implements a 2D workspace grid and provides a
+workspace switcher that understands multiple rows.  In addition, the standard
+keyboard shortcuts for workspace up/down navigation are modified to actually
+switch workspaces instead of bringing up the Cinnamon Workspace Expo and
+Overview.
+
+Installing
+-----------
+1. Place the "workspace-grid@hernejj" folder in the 
+   ".local/share/cinnamon/applets" folder in your home directory.
+
+2. Restart Cinnamon either by using Alt+F2, then hit 'r' then the enter key. Or
+   simply log out and log back in.
+
+3. Start the "Cinnamon Settings" program, go to the Applets section and look
+   for the entry named "Workspace grid (2D) and switcher".  Check the checkbox
+   to the left of this entry to enable this applet.
+
+Setting the Number of Workspaces
+--------------------------------
+This applet allows you to configure the number or rows and columns in your
+workspace grid.  Just right click on the applet and a dialog will appear.
+Enter the number of columns and rows you want and press the enter key.
+
+Navigating
+-----------
+You can navigate between your workspaces using the standard system keyboard
+shortcuts.  By default they are as listed:
+
+    switch-to-workspace-up      Ctrl+Alt+Up_Arrow
+    switch-to-workspace-down    Ctrl+Alt+Down_Arrow
+    switch-to-workspace-left    Ctrl+Alt+Left_Arrow
+    switch-to-workspace-right   Ctrl+Alt+Right_Arrow
+    
+You can also click on the workspace or the row indicator lines within the
+switcher to navigate directly to a specific workspace or row.
+
+You can also place your mouse over the switcher and use the scroll wheel to
+navigate forward and backward in the workspace grid.
+
+Cinnamon Compatibility
+-----------------------
+This applet has been tested to be compatible with the following versions of
+Cinnamon:
+     1.6.7
+
+Change Log
+-----------
+v0.1:
+    - Initial release.
+
