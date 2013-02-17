@@ -19,12 +19,13 @@
  * 
  *  Change log
  * 
- * * 0.1
- * - Initial version
- *
  * * 0.2
  * - Added key binding support for Linux Mint 13 & Cinnamon 1.4.0.
  * - Added some debug logging to assist with future incompatibility problems.
+ *
+ * * 0.1
+ * - Initial version
+ *
  */
  
 const St = imports.gi.St;

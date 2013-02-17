@@ -1,4 +1,4 @@
-Workspace grid (2D) and switcher  v0.1
+Workspace grid (2D) and switcher  v0.2
 ========================================
 2D workspace grid and switcher for Cinnamon Desktop Environment
 
@@ -12,6 +12,14 @@ workspace switcher that understands multiple rows.  In addition, the standard
 keyboard shortcuts for workspace up/down navigation are modified to actually
 switch workspaces instead of bringing up the Cinnamon Workspace Expo and
 Overview.
+
+Compatibility
+--------------
+This applet has been tested to be compatible with the following versions of
+Cinnamon and Linux distributions:
+    Linux Mint 13 - Cinnamon 1.4.0
+    Ubuntu 12.04  - Cinnamon 1.6.7
+    Ubuntu 12.10  - Cinnamon 1.6.7
 
 Installing
 -----------
@@ -47,14 +55,11 @@ switcher to navigate directly to a specific workspace or row.
 You can also place your mouse over the switcher and use the scroll wheel to
 navigate forward and backward in the workspace grid.
 
-Cinnamon Compatibility
------------------------
-This applet has been tested to be compatible with the following versions of
-Cinnamon:
-     1.6.7
-
 Change Log
 -----------
+v0.2:
+    - Added key binding support for Linux Mint 13 & Cinnamon 1.4.0.
+    - Added some debug logging to assist with future incompatibility problems.
 v0.1:
     - Initial release.
 
