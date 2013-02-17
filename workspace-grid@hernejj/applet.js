@@ -1,3 +1,32 @@
+/*
+ * This application is released under the GNU General Public License v2. A full
+ * copy of the license can be found here: http://www.gnu.org/licenses/gpl.txt  
+ * Thank you for using free software!
+ *
+ * Cinnamon 2D Workspace Grid (c) Jason J. Herne <hernejj@gmail.com> 2013
+ *
+ * Portions of this code were adapted from the workspace-switcher@cinnamon.org
+ * applet created by the Cinnamon Team: http://cinnamon.linuxmint.com/
+ *
+ * Portions of this code were adapted from the Gnome Shell Frippery Bottom Panel
+ * extension created by rmyorston: 
+ * https://extensions.gnome.org/extension/3/bottom-panel/
+ * 
+ * Supported Configurations
+ *      Linux Mint 13 - Cinnamon 1.4.0
+ *      Ubuntu 12.04  - Cinnamon 1.6.7
+ *      Ubuntu 12.10  - Cinnamon 1.6.7
+ * 
+ *  Change log
+ * 
+ * * 0.1
+ * - Initial version
+ *
+ * * 0.2
+ * - Added key binding support for Linux Mint 13 & Cinnamon 1.4.0.
+ * - Added some debug logging to assist with future incompatibility problems.
+ */
+ 
 const St = imports.gi.St;
 const Lang = imports.lang;
 const Applet = imports.ui.applet;
@@ -59,7 +88,83 @@ function equalize_num_workspaces() {
     }
 }
 
-function switchWorkspace(display, screen, window, binding) {
+function registerKeyBindings() {
+    try {
+        global.log("workspace-grid@hernejj: Trying to register NEW key bindings");
+        registerKeyBindingsNew();
+        global.log("workspace-grid@hernejj: Registered NEW keybindings");
+    }
+    catch (e) {
+        global.log("workspace-grid@hernejj: Registering NEW keybindings failed!");
+        global.logError("workspace-grid@hernejj exception: " + e.toString());
+        
+        try {
+            global.log("workspace-grid@hernejj: Trying to register OLD key bindings");
+            registerKeyBindingsOld();
+            global.log("workspace-grid@hernejj: Registered OLD keybindings");
+        }
+        catch (e) {
+            global.log("workspace-grid@hernejj: Registering OLD keybindings failed!");
+            global.logError("workspace-grid@hernejj exception: " + e.toString());
+        }
+    }
+}
+
+function deregisterKeyBindings() {
+    try {
+        global.log("workspace-grid@hernejj: Trying to DEregister NEW key bindings");
+        deregisterKeyBindingsNew();
+        global.log("workspace-grid@hernejj: DEregistered NEW keybindings");
+    }
+    catch (e) {
+        global.log("hernejj: DEregistering NEW keybindings failed!");
+        global.logError("hernejj exception: " + e.toString());
+        
+        try {
+            global.log("workspace-grid@hernejj: Trying to DEregister OLD key bindings");
+            deregisterKeyBindingsOld();
+            global.log("workspace-grid@hernejj: DEregistered OLD keybindings");
+        }
+        catch (e) {
+            global.log("workspace-grid@hernejj: DEregistering OLD keybindings failed!");
+            global.logError("workspace-grid@hernejj exception: " + e.toString());
+        }
+    }
+}
+
+// Need these on Ubuntu 12.04 & 12.10 w/Cinnamon 1.6.7
+function registerKeyBindingsNew() {
+    Meta.keybindings_set_custom_handler('switch-to-workspace-up', Lang.bind(this, switchWorkspaceNew));
+    Meta.keybindings_set_custom_handler('switch-to-workspace-down', Lang.bind(this, switchWorkspaceNew));
+    Meta.keybindings_set_custom_handler('switch-to-workspace-left', Lang.bind(this, switchWorkspaceNew));
+    Meta.keybindings_set_custom_handler('switch-to-workspace-right', Lang.bind(this, switchWorkspaceNew));
+}
+
+// Need these on Linux Mint w/Cinnamon 1.4.0
+function registerKeyBindingsOld() {
+    Main.wm.setKeybindingHandler('switch_to_workspace_up', Lang.bind(this, switchWorkspaceOld));
+    Main.wm.setKeybindingHandler('switch_to_workspace_down', Lang.bind(this, switchWorkspaceOld));
+    Main.wm.setKeybindingHandler('switch_to_workspace_left', Lang.bind(this, switchWorkspaceOld));
+    Main.wm.setKeybindingHandler('switch_to_workspace_right', Lang.bind(this, switchWorkspaceOld));
+}
+
+// Need these on Ubuntu 12.04 & 12.10 w/Cinnamon 1.6.7
+function deregisterKeyBindingsNew() {
+    Meta.keybindings_set_custom_handler('switch-to-workspace-up', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcher));
+    Meta.keybindings_set_custom_handler('switch-to-workspace-down', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcher));
+    Meta.keybindings_set_custom_handler('switch-to-workspace-left', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcher));
+    Meta.keybindings_set_custom_handler('switch-to-workspace-right', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcher));
+}
+
+// Need these on Linux Mint w/Cinnamon 1.4.0
+function deregisterKeyBindingsOld() {
+    Main.wm.setKeybindingHandler('switch_to_workspace_up', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcherOld));
+    Main.wm.setKeybindingHandler('switch_to_workspace_down', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcherOld));
+    Main.wm.setKeybindingHandler('switch_to_workspace_left', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcherOld));
+    Main.wm.setKeybindingHandler('switch_to_workspace_right', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcherOld));
+}
+
+function switchWorkspaceNew(display, screen, window, binding) {
     let current_workspace_index = global.screen.get_active_workspace_index();
 
     if (binding.get_name() == 'switch-to-workspace-left')
@@ -70,6 +175,22 @@ function switchWorkspace(display, screen, window, binding) {
         Main.wm.actionMoveWorkspaceUp();
     else if (binding.get_name() == 'switch-to-workspace-down')
         Main.wm.actionMoveWorkspaceDown();
+        
+    if (current_workspace_index !== global.screen.get_active_workspace_index())
+        Main.wm.showWorkspaceOSD();
+}
+
+function  switchWorkspaceOld(cinnamonwm, binding, mask, window, backwards) {
+    let current_workspace_index = global.screen.get_active_workspace_index();
+
+    if (binding == 'switch_to_workspace_left')
+        global.screen.get_active_workspace().get_neighbor(Meta.MotionDirection.LEFT).activate(global.get_current_time());
+    else if (binding == 'switch_to_workspace_right')
+        global.screen.get_active_workspace().get_neighbor(Meta.MotionDirection.RIGHT).activate(global.get_current_time());
+    else if (binding == 'switch_to_workspace_up')
+        global.screen.get_active_workspace().get_neighbor(Meta.MotionDirection.UP).activate(global.get_current_time());
+    else if (binding == 'switch_to_workspace_down')
+        global.screen.get_active_workspace().get_neighbor(Meta.MotionDirection.DOWN).activate(global.get_current_time());
         
     if (current_workspace_index !== global.screen.get_active_workspace_index())
         Main.wm.showWorkspaceOSD();
@@ -86,6 +207,7 @@ MyApplet.prototype = {
         Applet.Applet.prototype._init.call(this, orientation, panel_height);
         
         try {
+            global.log("workspace-grid@hernejj: v0.2");
             this.button = [];
             this.actor.set_style_class_name("workspace-switcher-box");
             read_prefs();
@@ -99,24 +221,18 @@ MyApplet.prototype = {
             global.settings.connect('changed::panel-edit-mode', Lang.bind(this, this.onPanelEditModeChanged));  
         }
         catch (e) {
-            global.logError(e);
+            global.logError("workspace-grid@hernejj Main Applet Exception: " + e.toString());
         }
     },
     
     on_applet_added_to_panel: function () {
         set_workspace_grid(ncols, nrows);
-        Meta.keybindings_set_custom_handler('switch-to-workspace-up', Lang.bind(this, switchWorkspace));
-        Meta.keybindings_set_custom_handler('switch-to-workspace-down', Lang.bind(this, switchWorkspace));
-        Meta.keybindings_set_custom_handler('switch-to-workspace-left', Lang.bind(this, switchWorkspace));
-        Meta.keybindings_set_custom_handler('switch-to-workspace-right', Lang.bind(this, switchWorkspace));
+        registerKeyBindings();
     },
 
     on_applet_removed_from_panel: function() {
         set_workspace_grid(-1, 1);
-        Meta.keybindings_set_custom_handler('switch-to-workspace-up', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcher));
-        Meta.keybindings_set_custom_handler('switch-to-workspace-down', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcher));
-        Meta.keybindings_set_custom_handler('switch-to-workspace-up', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcher));
-        Meta.keybindings_set_custom_handler('switch-to-workspace-down', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcher));
+        deregisterKeyBindings();
     },
     
     onAppletClicked: function(actor, event) {
