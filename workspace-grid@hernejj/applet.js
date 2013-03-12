@@ -19,12 +19,16 @@
  * 
  *  Change log
  * 
+ * * 0.3
+ * - Bugfix: Removed css junk that was messing up bottom panel style.
+ * - Bugfix: Allow applet to properly resize with bottom panel.
+ * 
  * * 0.2
  * - Added key binding support for Linux Mint 13 & Cinnamon 1.4.0.
  * - Added some debug logging to assist with future incompatibility problems.
  *
  * * 0.1
- * - Initial version
+ * - Initial version.
  *
  */
  
@@ -285,7 +289,6 @@ MyApplet.prototype = {
     },
 
     on_panel_height_changed: function() {
-        this._scaleMode = global.settings.get_boolean('panel-scale-text-icons');
         this.rebuildWorkspaceSwitcher();
     },
 
@@ -308,13 +311,9 @@ MyApplet.prototype = {
             this.button[i].set_child(label);
             this.actor.add(this.button[i]);
             this.button[i].index = i;
-            
-            if (this._scaleMode)
-                this.button[i].set_width(this._panelHeight);
-            
+            this.button[i].set_height(this._panelHeight);
             this.button[i].connect('button-release-event', Lang.bind(this, this.onWorkspaceButtonClicked));
         }
-        
         this.updateWorkspaceSwitcher();
     },
 
