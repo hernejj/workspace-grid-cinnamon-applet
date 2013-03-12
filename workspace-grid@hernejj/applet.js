@@ -4,34 +4,7 @@
  * Thank you for using free software!
  *
  * Cinnamon 2D Workspace Grid (c) Jason J. Herne <hernejj@gmail.com> 2013
- *
- * Portions of this code were adapted from the workspace-switcher@cinnamon.org
- * applet created by the Cinnamon Team: http://cinnamon.linuxmint.com/
- *
- * Portions of this code were adapted from the Gnome Shell Frippery Bottom Panel
- * extension created by rmyorston: 
- * https://extensions.gnome.org/extension/3/bottom-panel/
- * 
- * Supported Configurations
- *      Linux Mint 13 - Cinnamon 1.4.0
- *      Ubuntu 12.04  - Cinnamon 1.6.7
- *      Ubuntu 12.10  - Cinnamon 1.6.7
- * 
- *  Change log
- * 
- * * 0.3
- * - Bugfix: Removed css junk that was messing up bottom panel style.
- * - Bugfix: Allow applet to properly resize with bottom panel.
- * 
- * * 0.2
- * - Added key binding support for Linux Mint 13 & Cinnamon 1.4.0.
- * - Added some debug logging to assist with future incompatibility problems.
- *
- * * 0.1
- * - Initial version.
- *
  */
- 
 const St = imports.gi.St;
 const Lang = imports.lang;
 const Applet = imports.ui.applet;

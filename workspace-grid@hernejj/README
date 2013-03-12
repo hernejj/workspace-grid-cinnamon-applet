@@ -13,6 +13,13 @@ keyboard shortcuts for workspace up/down navigation are modified to actually
 switch workspaces instead of bringing up the Cinnamon Workspace Expo and
 Overview.
 
+Portions of this code were adapted from the workspace-switcher@cinnamon.org
+applet created by the Cinnamon Team: http://cinnamon.linuxmint.com/
+
+Portions of this code were adapted from the Gnome Shell Frippery Bottom Panel
+extension created by rmyorston: 
+https://extensions.gnome.org/extension/3/bottom-panel/
+
 Compatibility
 --------------
 This applet has been tested to be compatible with the following versions of
@@ -54,6 +61,12 @@ switcher to navigate directly to a specific workspace or row.
 
 You can also place your mouse over the switcher and use the scroll wheel to
 navigate forward and backward in the workspace grid.
+
+License
+-----------
+This application is released under the GNU General Public License v2. A full
+copy of the license can be found here: http://www.gnu.org/licenses/gpl.txt  
+Thank you for using free software!
 
 Change Log
 -----------
