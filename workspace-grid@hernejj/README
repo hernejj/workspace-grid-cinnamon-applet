@@ -1,4 +1,4 @@
-Workspace grid (2D) and switcher  v0.3
+Workspace grid (2D) and switcher  v0.4
 ========================================
 2D workspace grid and switcher for Cinnamon Desktop Environment
 
@@ -70,6 +70,8 @@ Thank you for using free software!
 
 Change Log
 -----------
+v0.4:
+    - Don't override theme style for better theme integration
 v0.3:
     - Bugfix: Removed css junk that was messing up bottom panel style.
     - Bugfix: Allow applet to properly resize with bottom panel.
