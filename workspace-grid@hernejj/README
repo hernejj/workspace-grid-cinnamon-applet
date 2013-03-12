@@ -57,6 +57,9 @@ navigate forward and backward in the workspace grid.
 
 Change Log
 -----------
+v0.3:
+    - Bugfix: Removed css junk that was messing up bottom panel style.
+    - Bugfix: Allow applet to properly resize with bottom panel.
 v0.2:
     - Added key binding support for Linux Mint 13 & Cinnamon 1.4.0.
     - Added some debug logging to assist with future incompatibility problems.
