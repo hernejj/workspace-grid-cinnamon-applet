@@ -212,7 +212,7 @@ MyApplet.prototype = {
         Applet.Applet.prototype._init.call(this, orientation, panel_height);
         
         try {
-            global.log("workspace-grid@hernejj: v0.2");
+            global.log("workspace-grid@hernejj: v0.3");
             this.button = [];
             this.actor.set_style_class_name("workspace-switcher-box");
             read_prefs();
