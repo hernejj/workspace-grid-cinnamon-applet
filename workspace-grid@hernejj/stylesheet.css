@@ -1,28 +1,18 @@
 .workspace-button {
     min-width: 2.5em;
     font-weight: bold;
-    color: #ccc;
     transition-duration: 100;
-    border: 1px;
-    border-color: #ccc;
     padding: 2px;
 }
 
 .workspace-button:outlined {
     padding: 1px;
-    border: 2px solid white;
-    background: #222;
 }
 
 .workspace-row-indicator {
     width: 1.2em;
     -active-color: #fff;
     -inactive-color: #888;
-}
-
-.workspace-button:hover {
-    color: white;
-    text-shadow: black 0px 2px 2px;
 }
 
 .workspace-dialog-label {
@@ -39,7 +29,6 @@
 
 .workspace-dialog {
     border-radius: 16px;
-
     padding-right: 21px;
     padding-left: 21px;
     padding-bottom: 15px;
