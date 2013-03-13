@@ -266,6 +266,7 @@ MyApplet.prototype = {
     },
 
     rebuildWorkspaceSwitcher: function() {
+        this.reload_stylesheet();
         this.actor.destroy_all_children();
 
         if (nrows > 1) {
@@ -313,6 +314,23 @@ MyApplet.prototype = {
         
         if ( this.row_indicator )
             this.row_indicator.queue_repaint();
+    },
+    
+    reload_stylesheet: function() {
+        let applet_dir = imports.ui.appletManager._find_applet('workspace-grid@hernejj');
+        let themeContext = St.ThemeContext.get_for_stage(global.stage);
+        let theme = themeContext.get_theme();
+        let stylesheetFile = applet_dir.get_child('stylesheet.css');
+
+        if (stylesheetFile.query_exists(null)) {
+            try {
+                global.log('workspace-grid@hernejj: reloading css from file: ' + stylesheetFile.get_path());
+                theme.load_stylesheet(stylesheetFile.get_path());
+            } catch (e) {
+                global.logError('workspace-grid@hernejj: stylesheet parse error: ' + e);
+                return null;
+            }
+        }
     },
     
     draw_row_indicator: function(area) {
