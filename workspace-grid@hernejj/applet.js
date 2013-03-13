@@ -195,8 +195,17 @@ MyApplet.prototype = {
             this.actor.connect('button-press-event', Lang.bind(this, this.onAppletClicked));
             this.actor.connect('scroll-event', Lang.bind(this,this.onAppletScrollWheel));
             global.screen.connect('notify::n-workspaces', Lang.bind(this, this.rebuildWorkspaceSwitcher));
-            global.window_manager.connect('switch-workspace', Lang.bind(this, this.updateWorkspaceSwitcher));   
             global.settings.connect('changed::panel-edit-mode', Lang.bind(this, this.onPanelEditModeChanged));  
+
+            // NOTE: We should be connecting switch-workspace to updateWorkspaceSwitcher.  but when the theme is
+            // switched, for some strange reason, the row indicator bars stop drawing.  The way to get them to
+            // start drawing again appears to be a call to rebuildWorkspaceSwitcher.  I'm not sure why this
+            // happens, but if we connect switch-workspace to rebuildWorkspaceSwitcher at least the problem will
+            // get corrected when the user switches desktops.  Not ideal, but I don't have a better idea at the
+            // moment.  If Cinnamon provided a "theme changed" event, we'd be able to use that.
+            //global.window_manager.connect('switch-workspace', Lang.bind(this, this.updateWorkspaceSwitcher));   
+            global.window_manager.connect('switch-workspace', Lang.bind(this, this.rebuildWorkspaceSwitcher));   
+            
         }
         catch (e) {
             global.logError("workspace-grid@hernejj Main Applet Exception: " + e.toString());
