@@ -174,15 +174,16 @@ function  switchWorkspaceOld(cinnamonwm, binding, mask, window, backwards) {
         Main.wm.showWorkspaceOSD();
 }
 
-function MyApplet(orientation, panel_height) {
-    this._init(orientation, panel_height);
+function MyApplet(orientation, panel_height, metadata) {
+    this._init(orientation, panel_height, metadata);
 }
 
 MyApplet.prototype = {
     __proto__: Applet.Applet.prototype,
 
-    _init: function(orientation, panel_height) {
+    _init: function(orientation, panel_height, metadata) {
         Applet.Applet.prototype._init.call(this, orientation, panel_height);
+        this.metadata = metadata;
         
         try {
             global.log("workspace-grid@hernejj: v0.4");
@@ -192,7 +193,6 @@ MyApplet.prototype = {
             this.rebuildWorkspaceSwitcher();
             this.onPanelEditModeChanged();
                         
-            this.actor.connect('button-press-event', Lang.bind(this, this.onAppletClicked));
             this.actor.connect('scroll-event', Lang.bind(this,this.onAppletScrollWheel));
             global.screen.connect('notify::n-workspaces', Lang.bind(this, this.rebuildWorkspaceSwitcher));
             global.settings.connect('changed::panel-edit-mode', Lang.bind(this, this.onPanelEditModeChanged));  
@@ -222,8 +222,8 @@ MyApplet.prototype = {
         deregisterKeyBindings();
     },
     
-    onAppletClicked: function(actor, event) {
-        if ( event.get_button() == 3 ) {  // Catch right click only
+    onConfigIconClicked: function(actor, event) {
+        if ( event.get_button() == 1 ) {  // Catch left click only
             if (this._workspaceDialog == null) this._workspaceDialog = new WorkspaceDialog();
             this._workspaceDialog.open();
             this.rebuildWorkspaceSwitcher();
@@ -298,6 +298,14 @@ MyApplet.prototype = {
             this.button[i].connect('button-release-event', Lang.bind(this, this.onWorkspaceButtonClicked));
         }
         this.updateWorkspaceSwitcher();
+
+        // Create configuration icon
+        let gicon = Gio.icon_new_for_string(this.metadata.path + "/my-icon.png");
+        this.config_icon = new St.Icon({ gicon: gicon});
+        this.config_icon.reactive = true;
+        this.config_icon.set_icon_size(24,24);
+        this.config_icon.connect('button-press-event', Lang.bind(this, this.onConfigIconClicked));
+        this.actor.add(this.config_icon);
     },
 
     updateWorkspaceSwitcher: function() {
@@ -451,6 +459,6 @@ WorkspaceDialog.prototype = {
 Signals.addSignalMethods(WorkspaceDialog.prototype);
 
 function main(metadata, orientation, panel_height) {  
-    let myApplet = new MyApplet(orientation, panel_height);
+    let myApplet = new MyApplet(orientation, panel_height, metadata);
     return myApplet;      
 }

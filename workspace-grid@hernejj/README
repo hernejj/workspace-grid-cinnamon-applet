@@ -24,9 +24,7 @@ Compatibility
 --------------
 This applet has been tested to be compatible with the following versions of
 Cinnamon and Linux distributions:
-    Linux Mint 13 - Cinnamon 1.4.0
-    Ubuntu 12.04  - Cinnamon 1.6.7
-    Ubuntu 12.10  - Cinnamon 1.6.7
+    Linux Mint 17 - Cinnamon 2.2
 
 Installing
 -----------
@@ -43,8 +41,9 @@ Installing
 Setting the Number of Workspaces
 --------------------------------
 This applet allows you to configure the number or rows and columns in your
-workspace grid.  Just right click on the applet and a dialog will appear.
-Enter the number of columns and rows you want and press the enter key.
+workspace grid.  Just click on the configuration icon on the left of the applet
+and a dialog will appear. Enter the number of columns and rows you want and
+press the enter key.
 
 Navigating
 -----------
@@ -71,6 +70,8 @@ Thank you for using free software!
 Change Log
 -----------
 v0.4:
+    - compat: Remove right-click to configure for Cinnamon 2.2 compatability
+    - Compat: Add configuration via left-click on new icon.
     - Don't override theme style for better theme integration.
     - Workaround for "theme change makes row indicator disappear" bug.
 v0.3:
