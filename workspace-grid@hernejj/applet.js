@@ -15,81 +15,25 @@ const Main = imports.ui.main;
 
 function registerKeyBindings() {
     try {
-        global.log("workspace-grid@hernejj: Trying to register NEW key bindings");
-        registerKeyBindingsNew();
-        global.log("workspace-grid@hernejj: Registered NEW keybindings");
+        Meta.keybindings_set_custom_handler('switch-to-workspace-up', Lang.bind(this, switchWorkspace));
+        Meta.keybindings_set_custom_handler('switch-to-workspace-down', Lang.bind(this, switchWorkspace));
+        Meta.keybindings_set_custom_handler('switch-to-workspace-left', Lang.bind(this, switchWorkspace));
+        Meta.keybindings_set_custom_handler('switch-to-workspace-right', Lang.bind(this, switchWorkspace));
     }
     catch (e) {
-        global.log("workspace-grid@hernejj: Registering NEW keybindings failed!");
+        global.log("workspace-grid@hernejj: Registering keybindings failed!");
         global.logError("workspace-grid@hernejj exception: " + e.toString());
-        
-        try {
-            global.log("workspace-grid@hernejj: Trying to register OLD key bindings");
-            registerKeyBindingsOld();
-            global.log("workspace-grid@hernejj: Registered OLD keybindings");
-        }
-        catch (e) {
-            global.log("workspace-grid@hernejj: Registering OLD keybindings failed!");
-            global.logError("workspace-grid@hernejj exception: " + e.toString());
-        }
     }
 }
 
 function deregisterKeyBindings() {
-    try {
-        global.log("workspace-grid@hernejj: Trying to DEregister NEW key bindings");
-        deregisterKeyBindingsNew();
-        global.log("workspace-grid@hernejj: DEregistered NEW keybindings");
-    }
-    catch (e) {
-        global.log("hernejj: DEregistering NEW keybindings failed!");
-        global.logError("hernejj exception: " + e.toString());
-        
-        try {
-            global.log("workspace-grid@hernejj: Trying to DEregister OLD key bindings");
-            deregisterKeyBindingsOld();
-            global.log("workspace-grid@hernejj: DEregistered OLD keybindings");
-        }
-        catch (e) {
-            global.log("workspace-grid@hernejj: DEregistering OLD keybindings failed!");
-            global.logError("workspace-grid@hernejj exception: " + e.toString());
-        }
-    }
-}
-
-// Need these on Ubuntu 12.04 & 12.10 w/Cinnamon 1.6.7
-function registerKeyBindingsNew() {
-    Meta.keybindings_set_custom_handler('switch-to-workspace-up', Lang.bind(this, switchWorkspaceNew));
-    Meta.keybindings_set_custom_handler('switch-to-workspace-down', Lang.bind(this, switchWorkspaceNew));
-    Meta.keybindings_set_custom_handler('switch-to-workspace-left', Lang.bind(this, switchWorkspaceNew));
-    Meta.keybindings_set_custom_handler('switch-to-workspace-right', Lang.bind(this, switchWorkspaceNew));
-}
-
-// Need these on Linux Mint w/Cinnamon 1.4.0
-function registerKeyBindingsOld() {
-    Main.wm.setKeybindingHandler('switch_to_workspace_up', Lang.bind(this, switchWorkspaceOld));
-    Main.wm.setKeybindingHandler('switch_to_workspace_down', Lang.bind(this, switchWorkspaceOld));
-    Main.wm.setKeybindingHandler('switch_to_workspace_left', Lang.bind(this, switchWorkspaceOld));
-    Main.wm.setKeybindingHandler('switch_to_workspace_right', Lang.bind(this, switchWorkspaceOld));
-}
-
-// Need these on Ubuntu 12.04 & 12.10 w/Cinnamon 1.6.7
-function deregisterKeyBindingsNew() {
     Meta.keybindings_set_custom_handler('switch-to-workspace-up', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcher));
     Meta.keybindings_set_custom_handler('switch-to-workspace-down', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcher));
     Meta.keybindings_set_custom_handler('switch-to-workspace-left', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcher));
     Meta.keybindings_set_custom_handler('switch-to-workspace-right', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcher));
 }
 
-// Need these on Linux Mint w/Cinnamon 1.4.0
-function deregisterKeyBindingsOld() {
-    Main.wm.setKeybindingHandler('switch_to_workspace_up', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcherOld));
-    Main.wm.setKeybindingHandler('switch_to_workspace_down', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcherOld));
-    Main.wm.setKeybindingHandler('switch_to_workspace_left', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcherOld));
-    Main.wm.setKeybindingHandler('switch_to_workspace_right', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcherOld));
-}
-
-function switchWorkspaceNew(display, screen, window, binding) {
+function switchWorkspace(display, screen, window, binding) {
     let current_workspace_index = global.screen.get_active_workspace_index();
 
     if (binding.get_name() == 'switch-to-workspace-left')
@@ -100,22 +44,6 @@ function switchWorkspaceNew(display, screen, window, binding) {
         Main.wm.actionMoveWorkspaceUp();
     else if (binding.get_name() == 'switch-to-workspace-down')
         Main.wm.actionMoveWorkspaceDown();
-        
-    if (current_workspace_index !== global.screen.get_active_workspace_index())
-        Main.wm.showWorkspaceOSD();
-}
-
-function  switchWorkspaceOld(cinnamonwm, binding, mask, window, backwards) {
-    let current_workspace_index = global.screen.get_active_workspace_index();
-
-    if (binding == 'switch_to_workspace_left')
-        global.screen.get_active_workspace().get_neighbor(Meta.MotionDirection.LEFT).activate(global.get_current_time());
-    else if (binding == 'switch_to_workspace_right')
-        global.screen.get_active_workspace().get_neighbor(Meta.MotionDirection.RIGHT).activate(global.get_current_time());
-    else if (binding == 'switch_to_workspace_up')
-        global.screen.get_active_workspace().get_neighbor(Meta.MotionDirection.UP).activate(global.get_current_time());
-    else if (binding == 'switch_to_workspace_down')
-        global.screen.get_active_workspace().get_neighbor(Meta.MotionDirection.DOWN).activate(global.get_current_time());
         
     if (current_workspace_index !== global.screen.get_active_workspace_index())
         Main.wm.showWorkspaceOSD();
