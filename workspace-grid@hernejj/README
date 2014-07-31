@@ -1,4 +1,4 @@
-Workspace grid (2D) and switcher  v0.4
+Workspace grid (2D) and switcher  v0.5
 ========================================
 2D workspace grid and switcher for Cinnamon Desktop Environment
 
@@ -42,9 +42,9 @@ Installing
 Setting the Number of Workspaces
 --------------------------------
 This applet allows you to configure the number or rows and columns in your
-workspace grid.  Just click on the configuration icon on the left of the applet
+workspace grid.  Just right click on the applet and choose "Configure..."
 and a dialog will appear. Enter the number of columns and rows you want and
-press the enter key.
+click the close button.
 
 Navigating
 -----------
@@ -70,6 +70,9 @@ Thank you for using free software!
 
 Change Log
 -----------
+v0.5:
+    - Added support for Cinnamon Settings API.
+    - Removed hackish "configuration icon".
 v0.4:
     - compat: Remove right-click to configure for Cinnamon 2.2 compatability
     - Compat: Add configuration via left-click on new icon.
