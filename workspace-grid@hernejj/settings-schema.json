@@ -16,5 +16,11 @@
     "step" : 1,
     "units" : "desktops",
     "description" : "Number of rows:"
+ },
+ "registerUpDownKeyBindings" : {
+    "type" : "checkbox",
+    "default" : true,
+    "description": "Use Keyboard shortcuts (Ctrl+Alt+Up/Down) to switch desktop rows",
+    "tooltip": "This prevents the use of the Expo and Scale keyboard shortcuts in Cinnamon"
  }
 }

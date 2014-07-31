@@ -13,10 +13,16 @@ const Clutter = imports.gi.Clutter;
 const Meta = imports.gi.Meta;
 const Main = imports.ui.main;
 
-function registerKeyBindings() {
+function registerKeyBindings(registerUpDownKeyBindings) {
     try {
-        Meta.keybindings_set_custom_handler('switch-to-workspace-up', Lang.bind(this, switchWorkspace));
-        Meta.keybindings_set_custom_handler('switch-to-workspace-down', Lang.bind(this, switchWorkspace));
+        if (registerUpDownKeyBindings) {
+            Meta.keybindings_set_custom_handler('switch-to-workspace-up', Lang.bind(this, switchWorkspace));
+            Meta.keybindings_set_custom_handler('switch-to-workspace-down', Lang.bind(this, switchWorkspace));
+        }
+        else {
+            Meta.keybindings_set_custom_handler('switch-to-workspace-up', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcher));
+            Meta.keybindings_set_custom_handler('switch-to-workspace-down', Lang.bind(Main.wm, Main.wm._showWorkspaceSwitcher));
+        }
         Meta.keybindings_set_custom_handler('switch-to-workspace-left', Lang.bind(this, switchWorkspace));
         Meta.keybindings_set_custom_handler('switch-to-workspace-right', Lang.bind(this, switchWorkspace));
     }
@@ -67,6 +73,7 @@ MyApplet.prototype = {
             this.settings = new Settings.AppletSettings(this, "workspace-grid@hernejj", instanceId);
             this.settings.bindProperty(Settings.BindingDirection.IN, "numCols", "numCols", this.onUpdateNumberOfWorkspaces, null);
             this.settings.bindProperty(Settings.BindingDirection.IN, "numRows", "numRows", this.onUpdateNumberOfWorkspaces, null);
+            this.settings.bindProperty(Settings.BindingDirection.IN, "registerUpDownKeyBindings", "registerUpDownKeyBindings", this.onKeyBindingChanged, null);
             
             this.rebuildWorkspaceSwitcher();
             this.onPanelEditModeChanged();
@@ -113,12 +120,16 @@ MyApplet.prototype = {
     
     on_applet_added_to_panel: function () {
         this.set_workspace_grid(this.numCols, this.numRows);
-        registerKeyBindings();
+        registerKeyBindings(this.registerUpDownKeyBindings);
     },
 
     on_applet_removed_from_panel: function() {
         this.set_workspace_grid(-1, 1);
         deregisterKeyBindings();
+    },
+    
+    onKeyBindingChanged: function() {
+        registerKeyBindings(this.registerUpDownKeyBindings)
     },
     
     onUpdateNumberOfWorkspaces: function() {
