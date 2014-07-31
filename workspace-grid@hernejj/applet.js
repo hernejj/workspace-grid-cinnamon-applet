@@ -179,6 +179,7 @@ MyApplet.prototype = {
     },
 
     rebuildWorkspaceSwitcher: function() {
+        this.reload_stylesheet();
         this.actor.destroy_all_children();
 
         if (this.numRows > 1) {
