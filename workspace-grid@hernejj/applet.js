@@ -8,6 +8,7 @@
 const St = imports.gi.St;
 const Lang = imports.lang;
 const Applet = imports.ui.applet;
+const Settings = imports.ui.settings;
 const Clutter = imports.gi.Clutter;
 const ModalDialog = imports.ui.modalDialog;
 const Gio = imports.gi.Gio;
@@ -174,22 +175,28 @@ function  switchWorkspaceOld(cinnamonwm, binding, mask, window, backwards) {
         Main.wm.showWorkspaceOSD();
 }
 
-function MyApplet(orientation, panel_height, metadata) {
-    this._init(orientation, panel_height, metadata);
+function MyApplet(metadata, orientation, panel_height, instanceId) {
+    this._init(metadata, orientation, panel_height, instanceId);
 }
 
 MyApplet.prototype = {
     __proto__: Applet.Applet.prototype,
 
-    _init: function(orientation, panel_height, metadata) {
-        Applet.Applet.prototype._init.call(this, orientation, panel_height);
+    _init: function(metadata, orientation, panel_height, instanceId) {
+        Applet.Applet.prototype._init.call(this, orientation, panel_height, instanceId);
         this.metadata = metadata;
         
         try {
-            global.log("workspace-grid@hernejj: v0.4");
+            global.log("workspace-grid@hernejj: v0.5");
             this.button = [];
             this.actor.set_style_class_name("workspace-switcher-box");
-            read_prefs();
+            this.settings = new Settings.AppletSettings(this, "workspace-grid@hernejj", instanceId);
+            
+            this.settings.bindProperty(Settings.BindingDirection.IN, "numCols", "numCols", this.onUpdateNumberOfWorkspaces, null);
+            this.settings.bindProperty(Settings.BindingDirection.IN, "numRows", "numRows", this.onUpdateNumberOfWorkspaces, null);
+            ncols = this.numCols;
+            nrows = this.numRows;
+            
             this.rebuildWorkspaceSwitcher();
             this.onPanelEditModeChanged();
                         
@@ -230,6 +237,12 @@ MyApplet.prototype = {
             return true;
         }
         return false;
+    },
+    
+    onUpdateNumberOfWorkspaces: function() {
+        ncols = this.numCols;
+        nrows = this.numRows;
+        set_workspace_grid(ncols, -1);
     },
     
     onPanelEditModeChanged: function() {
@@ -458,7 +471,7 @@ WorkspaceDialog.prototype = {
 };
 Signals.addSignalMethods(WorkspaceDialog.prototype);
 
-function main(metadata, orientation, panel_height) {  
-    let myApplet = new MyApplet(orientation, panel_height, metadata);
+function main(metadata, orientation, panel_height, instanceId) {  
+    let myApplet = new MyApplet(metadata, orientation, panel_height, instanceId);
     return myApplet;      
 }
