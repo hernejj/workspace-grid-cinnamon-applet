@@ -13,30 +13,6 @@ const Clutter = imports.gi.Clutter;
 const Meta = imports.gi.Meta;
 const Main = imports.ui.main;
 
-let ncols = 2;
-let nrows = 1;
-
-function set_workspace_grid(cols, rows) {
-    equalize_num_workspaces();
-    global.screen.override_workspace_layout(Meta.ScreenCorner.TOPLEFT, false, rows, cols);
-}
-
-function equalize_num_workspaces() {
-    let new_ws_count = nrows * ncols;
-    let old_ws_count = global.screen.n_workspaces;
-    
-    if (new_ws_count > old_ws_count) {
-        for (let i=old_ws_count; i<new_ws_count; i++)
-            global.screen.append_new_workspace(false, global.get_current_time());
-    }
-    else if (new_ws_count < old_ws_count) {
-        for (let i=old_ws_count; i>new_ws_count; i--) {
-            let ws = global.screen.get_workspace_by_index( global.screen.n_workspaces-1 );
-            global.screen.remove_workspace(ws, global.get_current_time());
-        }
-    }
-}
-
 function registerKeyBindings() {
     try {
         global.log("workspace-grid@hernejj: Trying to register NEW key bindings");
@@ -161,11 +137,8 @@ MyApplet.prototype = {
             this.button = [];
             this.actor.set_style_class_name("workspace-switcher-box");
             this.settings = new Settings.AppletSettings(this, "workspace-grid@hernejj", instanceId);
-            
             this.settings.bindProperty(Settings.BindingDirection.IN, "numCols", "numCols", this.onUpdateNumberOfWorkspaces, null);
             this.settings.bindProperty(Settings.BindingDirection.IN, "numRows", "numRows", this.onUpdateNumberOfWorkspaces, null);
-            ncols = this.numCols;
-            nrows = this.numRows;
             
             this.rebuildWorkspaceSwitcher();
             this.onPanelEditModeChanged();
@@ -189,20 +162,39 @@ MyApplet.prototype = {
         }
     },
     
+    set_workspace_grid: function (cols, rows) {
+        this.equalize_num_workspaces();
+        global.screen.override_workspace_layout(Meta.ScreenCorner.TOPLEFT, false, rows, cols);
+    },
+
+    equalize_num_workspaces: function() {
+        let new_ws_count = this.numRows * this.numCols;
+        let old_ws_count = global.screen.n_workspaces;
+        
+        if (new_ws_count > old_ws_count) {
+            for (let i=old_ws_count; i<new_ws_count; i++)
+                global.screen.append_new_workspace(false, global.get_current_time());
+        }
+        else if (new_ws_count < old_ws_count) {
+            for (let i=old_ws_count; i>new_ws_count; i--) {
+                let ws = global.screen.get_workspace_by_index( global.screen.n_workspaces-1 );
+                global.screen.remove_workspace(ws, global.get_current_time());
+            }
+        }
+    },
+    
     on_applet_added_to_panel: function () {
-        set_workspace_grid(ncols, nrows);
+        this.set_workspace_grid(this.numCols, this.numRows);
         registerKeyBindings();
     },
 
     on_applet_removed_from_panel: function() {
-        set_workspace_grid(-1, 1);
+        this.set_workspace_grid(-1, 1);
         deregisterKeyBindings();
     },
     
     onUpdateNumberOfWorkspaces: function() {
-        ncols = this.numCols;
-        nrows = this.numRows;
-        set_workspace_grid(ncols, -1);
+        this.set_workspace_grid(this.numCols, -1);
     },
     
     onPanelEditModeChanged: function() {
@@ -225,14 +217,14 @@ MyApplet.prototype = {
         if ( event.get_button() != 1 ) return false;
         
         let curws_idx = global.screen.get_active_workspace_index();
-        let curws_row = Math.floor(curws_idx/ncols);
+        let curws_row = Math.floor(curws_idx/this.numCols);
         let [x, y] = event.get_coords();
         let [wx, wy] = actor.get_transformed_position();
         let [w, h] = actor.get_size();
         y -= wy;
 
-        let clicked_row = Math.floor(nrows*y/h);
-        clicked_idx = (clicked_row * ncols) + (curws_idx % ncols);
+        let clicked_row = Math.floor(this.numRows*y/h);
+        clicked_idx = (clicked_row * this.numCols) + (curws_idx % this.numCols);
 
         global.screen.get_workspace_by_index(clicked_idx).activate(global.get_current_time());        
         return true;
@@ -248,10 +240,9 @@ MyApplet.prototype = {
     },
 
     rebuildWorkspaceSwitcher: function() {
-        this.reload_stylesheet();
         this.actor.destroy_all_children();
 
-        if (nrows > 1) {
+        if (this.numRows > 1) {
             this.row_indicator = new St.DrawingArea({ reactive: true, style_class: 'workspace-row-indicator' });
             this.row_indicator.connect('repaint', Lang.bind(this, this.draw_row_indicator));
             this.row_indicator.connect('button-press-event', Lang.bind(this, this.onRowIndicatorClicked));
@@ -276,9 +267,9 @@ MyApplet.prototype = {
     updateWorkspaceSwitcher: function() {
         let nworks = this.button.length;
         let active_ws = global.screen.get_active_workspace_index();
-        let active_row = Math.floor(active_ws/ncols);
-        let low = (active_row)*ncols;
-        let high = low + ncols;
+        let active_row = Math.floor(active_ws/this.numCols);
+        let low = (active_row)*this.numCols;
+        let high = low + this.numCols;
 
         for (let i=0; i < nworks; ++i) {
             if (i >= low && i < high) this.button[i].show();
@@ -324,10 +315,10 @@ MyApplet.prototype = {
         let inactive_color = themeNode.get_color('-inactive-color');
 
         let active = global.screen.get_active_workspace_index();
-        let active_row = Math.floor(active/ncols);
+        let active_row = Math.floor(active/this.numCols);
 
-        for ( let i=0; i < nrows; ++i ) {
-            let y = (i+1)*height/(nrows+1);
+        for ( let i=0; i < this.numRows; ++i ) {
+            let y = (i+1)*height/(this.numRows+1);
             let endx = (width / 10) * 9
             cr.moveTo(0, y);
             cr.lineTo(endx, y);
@@ -341,5 +332,5 @@ MyApplet.prototype = {
 
 function main(metadata, orientation, panel_height, instanceId) {  
     let myApplet = new MyApplet(metadata, orientation, panel_height, instanceId);
-    return myApplet;      
+    return myApplet;
 }
