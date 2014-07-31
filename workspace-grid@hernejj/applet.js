@@ -10,41 +10,11 @@ const Lang = imports.lang;
 const Applet = imports.ui.applet;
 const Settings = imports.ui.settings;
 const Clutter = imports.gi.Clutter;
-const ModalDialog = imports.ui.modalDialog;
-const Gio = imports.gi.Gio;
-const Signals = imports.signals;
-const GLib = imports.gi.GLib;
 const Meta = imports.gi.Meta;
 const Main = imports.ui.main;
 
 let ncols = 2;
 let nrows = 1;
-
-function read_prefs() {
-    let filePath = GLib.get_home_dir() + '/.workspace-grid.prefs';
-    let file = Gio.file_new_for_path(filePath);
-    if (file.query_exists(null)) {
-        let [flag, str] = file.load_contents(null);
-        if (flag) {
-            let lines = str.toString().split("\n");
-            if (lines.length < 2) return;
-            let cols = parseInt(lines[0]);
-            let rows = parseInt(lines[1]);
-            
-            if( isNaN(cols) || cols < 1 || cols > 6 ) return;
-            if( isNaN(rows) || rows < 1 || rows > 6 ) return;
-            ncols = cols;
-            nrows = rows;
-        }
-    }
-}
-
-function write_prefs() {
-    let filePath = GLib.get_home_dir() + '/.workspace-grid.prefs';
-    let rowFile = Gio.file_new_for_path(filePath);
-    let contents = ncols.toString() + "\n" + nrows.toString();
-    rowFile.replace_contents(contents, null, false, 0, null);
-}
 
 function set_workspace_grid(cols, rows) {
     equalize_num_workspaces();
@@ -229,16 +199,6 @@ MyApplet.prototype = {
         deregisterKeyBindings();
     },
     
-    onConfigIconClicked: function(actor, event) {
-        if ( event.get_button() == 1 ) {  // Catch left click only
-            if (this._workspaceDialog == null) this._workspaceDialog = new WorkspaceDialog();
-            this._workspaceDialog.open();
-            this.rebuildWorkspaceSwitcher();
-            return true;
-        }
-        return false;
-    },
-    
     onUpdateNumberOfWorkspaces: function() {
         ncols = this.numCols;
         nrows = this.numRows;
@@ -311,14 +271,6 @@ MyApplet.prototype = {
             this.button[i].connect('button-release-event', Lang.bind(this, this.onWorkspaceButtonClicked));
         }
         this.updateWorkspaceSwitcher();
-
-        // Create configuration icon
-        let gicon = Gio.icon_new_for_string(this.metadata.path + "/my-icon.png");
-        this.config_icon = new St.Icon({ gicon: gicon});
-        this.config_icon.reactive = true;
-        this.config_icon.set_icon_size(24,24);
-        this.config_icon.connect('button-press-event', Lang.bind(this, this.onConfigIconClicked));
-        this.actor.add(this.config_icon);
     },
 
     updateWorkspaceSwitcher: function() {
@@ -386,90 +338,6 @@ MyApplet.prototype = {
         }
     }
 };
-
-/* Workspace Switcher Options Dialog */
-function WorkspaceDialog() {
-    this._init();
-}
-
-WorkspaceDialog.prototype = {
-    __proto__: ModalDialog.ModalDialog.prototype,
-
-    _init: function() {
-        ModalDialog.ModalDialog.prototype._init.call(this, { styleClass: 'workspace-dialog' });
-
-        /* Column Stuff */
-        let label = new St.Label({ style_class: 'workspace-dialog-label', text: 'Number of columns' });
-        this.contentLayout.add(label, { y_align: St.Align.START });
-        
-        let entry = new St.Entry({ style_class: 'workspace-dialog-entry' });
-        this._colEntry = entry.clutter_text;
-        this.contentLayout.add(entry, { y_align: St.Align.START });
-        this.setInitialKeyFocus(this._colEntry);
-        this._colEntry.connect('key-press-event', Lang.bind(this, this._onKeyPress));
-
-        /* Row stuff */
-        label = new St.Label({ style_class: 'workspace-dialog-label', text: 'Number of rows' });
-        this.contentLayout.add(label, { y_align: St.Align.START });
-
-        entry = new St.Entry({ style_class: 'workspace-dialog-entry' });
-        this._rowEntry = entry.clutter_text;
-        this.contentLayout.add(entry, { y_align: St.Align.START });
-        this._rowEntry.connect('key-press-event', Lang.bind(this, this._onKeyPress));
-    },
-
-    open: function() {
-        this._colEntry.set_text(ncols.toString());
-        this._rowEntry.set_text(nrows.toString());
-        ModalDialog.ModalDialog.prototype.open.call(this);
-    },
-
-    _onKeyPress: function(actor, event) {
-        let symbol = event.get_key_symbol();
-
-        /* Enter: Commit changes to disk and to current workspace config */
-        if (symbol == Clutter.Return || symbol == Clutter.KP_Enter) {
-            let colnum = parseInt(this._colEntry.get_text());
-            let rownum = parseInt(this._rowEntry.get_text());
-            if ((colnum == ncols && rownum == nrows) ||
-               isNaN(colnum) || colnum < 1 || colnum > 6 ||
-               isNaN(rownum) || rownum < 1 || rownum > 6) {
-                this.close();
-                return true;
-            } 
-
-            ncols = colnum;
-            nrows = rownum;
-            set_workspace_grid(ncols, -1);
-            write_prefs();    
-            this.close();
-            return true;
-        }
-        
-        /* Esc: User closed without saving changes */
-        else if (symbol == Clutter.Escape) {
-            this.close();
-            return true;
-        }
-        
-        /* Tab/up/down: Switch fields*/
-        else if (symbol == Clutter.Tab) {
-            if ( actor == this._rowEntry ) global.stage.set_key_focus(this._workspaceEntry);
-            else global.stage.set_key_focus(this._rowEntry);
-            return true;
-        }
-        else if (symbol == Clutter.Up && actor == this._rowEntry) {
-            global.stage.set_key_focus(this._workspaceEntry);
-            return true;
-        }
-        else if (symbol == Clutter.Down && actor == this._workspaceEntry) {
-            global.stage.set_key_focus(this._rowEntry);
-            return true;
-        }
-        return false;
-    }
-};
-Signals.addSignalMethods(WorkspaceDialog.prototype);
 
 function main(metadata, orientation, panel_height, instanceId) {  
     let myApplet = new MyApplet(metadata, orientation, panel_height, instanceId);
