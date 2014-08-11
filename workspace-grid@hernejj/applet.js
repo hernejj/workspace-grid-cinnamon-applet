@@ -183,7 +183,8 @@ MyApplet.prototype = {
         this.actor.destroy_all_children();
 
         if (this.numRows > 1) {
-            this.row_indicator = new St.DrawingArea({ reactive: true, style_class: 'workspace-row-indicator' });
+            this.row_indicator = new St.DrawingArea({ reactive: true });
+            this.row_indicator.set_width(this._panelHeight/1.75);
             this.row_indicator.connect('repaint', Lang.bind(this, this.draw_row_indicator));
             this.row_indicator.connect('button-press-event', Lang.bind(this, this.onRowIndicatorClicked));
             this.actor.add(this.row_indicator);
