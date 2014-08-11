@@ -67,7 +67,7 @@ MyApplet.prototype = {
         this.metadata = metadata;
         
         try {
-            global.log("workspace-grid@hernejj: v0.5");
+            global.log("workspace-grid@hernejj: v0.6");
             this.button = [];
             this.actor.set_style_class_name("workspace-switcher-box");
             this.settings = new Settings.AppletSettings(this, "workspace-grid@hernejj", instanceId);
@@ -232,12 +232,10 @@ MyApplet.prototype = {
         let inactive_color = null;
         
         if (this.is_theme_light_on_dark()) {
-            global.logError('LIGHT on DARK');
             active_color = base_color.lighten();
             inactive_color = base_color.darken();
         }
         else {
-            global.logError('DARK on LIGHT');
             active_color = base_color.darken().darken();
             inactive_color = base_color.lighten().lighten();
         }
