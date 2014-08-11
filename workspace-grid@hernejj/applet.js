@@ -200,6 +200,7 @@ MyApplet.prototype = {
             this.actor.add(this.button[i]);
             this.button[i].index = i;
             this.button[i].set_height(this._panelHeight);
+            this.button[i].set_width(this._panelHeight*1.25);
             this.button[i].connect('button-release-event', Lang.bind(this, this.onWorkspaceButtonClicked));
         }
         this.updateWorkspaceSwitcher();
