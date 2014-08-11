@@ -227,8 +227,9 @@ MyApplet.prototype = {
         let themeNode = this.row_indicator.get_theme_node();
         let cr = area.get_context();
         
-        let active_color = this.determine_active_color();
-        let inactive_color = this.determine_inactive_color();
+        let base_color = this.get_base_color()
+        let active_color = base_color.lighten();
+        let inactive_color = base_color.darken();
         
         let active = global.screen.get_active_workspace_index();
         let active_row = Math.floor(active/this.numCols);
@@ -245,29 +246,13 @@ MyApplet.prototype = {
         }
     },
     
-    determine_active_color: function() {
-        // We want to take active color info from one of the unselected workspace buttons
-        // so find an unslected workspace button
-        let selected_idx = global.screen.get_active_workspace_index();
+    // All colors we use in this applet are based on this theme defined color.
+    // We simply grab the color of a normal, non-outlined workspae button.
+    get_base_color: function() {
         let unselected_idx = 0;
-        if (unselected_idx == selected_idx) unselected_idx = 1;
-        
-        let themeNode = this.button[unselected_idx].get_theme_node();
-        let active_color = themeNode.get_color('color');
-        return active_color.lighten();
+        if (unselected_idx == global.screen.get_active_workspace_index()) unselected_idx = 1;
+        return this.button[unselected_idx].get_theme_node().get_color('color');
     },
-    
-    determine_inactive_color: function() {
-        // We want to take active color info from one of the unselected workspace buttons
-        // so find an unslected workspace button
-        let selected_idx = global.screen.get_active_workspace_index();
-        let unselected_idx = 0;
-        if (unselected_idx == selected_idx) unselected_idx = 1;
-        
-        let themeNode = this.button[unselected_idx].get_theme_node();
-        let active_color = themeNode.get_color('color');
-        return active_color.darken();
-    }
 };
 
 function main(metadata, orientation, panel_height, instanceId) {  
