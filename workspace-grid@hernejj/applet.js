@@ -250,10 +250,10 @@ MyApplet.prototype = {
         let [width, height] = area.get_surface_size();
         let themeNode = this.row_indicator.get_theme_node();
         let cr = area.get_context();
-
-        let active_color = themeNode.get_color('-active-color');
-        let inactive_color = themeNode.get_color('-inactive-color');
-
+        
+        let active_color = this.determine_active_color();
+        let inactive_color = this.determine_inactive_color();
+        
         let active = global.screen.get_active_workspace_index();
         let active_row = Math.floor(active/this.numCols);
 
@@ -267,6 +267,30 @@ MyApplet.prototype = {
             cr.setLineWidth(2.0);
             cr.stroke();
         }
+    },
+    
+    determine_active_color: function() {
+        // We want ot take active color info from one of the unselected workspace buttons
+        // so find an unslected workspace button
+        let selected_idx = global.screen.get_active_workspace_index();
+        let unselected_idx = 0;
+        if (unselected_idx == selected_idx) unselected_idx = 1;
+        
+        let themeNode = this.button[unselected_idx].get_theme_node();
+        let active_color = themeNode.get_color('color');
+        return active_color.lighten();
+    },
+    
+    determine_inactive_color: function() {
+        // We want ot take active color info from one of the unselected workspace buttons
+        // so find an unslected workspace button
+        let selected_idx = global.screen.get_active_workspace_index();
+        let unselected_idx = 0;
+        if (unselected_idx == selected_idx) unselected_idx = 1;
+        
+        let themeNode = this.button[unselected_idx].get_theme_node();
+        let active_color = themeNode.get_color('color');
+        return active_color.darken();
     }
 };
 

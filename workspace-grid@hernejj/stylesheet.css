@@ -3,10 +3,6 @@
     font-weight: bold;
 }
 
-
-
 .workspace-row-indicator {
     width: 1.2em;
-    -active-color: #fff;
-    -inactive-color: #888;
 }
