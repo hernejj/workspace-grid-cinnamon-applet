@@ -196,6 +196,7 @@ MyApplet.prototype = {
             
             let text = (i+1).toString();
             let label = new St.Label({ text: text });
+            label.set_style("font-weight: bold");
             this.button[i].set_child(label);
             this.actor.add(this.button[i]);
             this.button[i].index = i;
