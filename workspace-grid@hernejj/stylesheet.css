@@ -1,13 +1,9 @@
 .workspace-button {
     min-width: 2.5em;
     font-weight: bold;
-    transition-duration: 100;
-    padding: 2px;
 }
 
-.workspace-button:outlined {
-    padding: 1px;
-}
+
 
 .workspace-row-indicator {
     width: 1.2em;
