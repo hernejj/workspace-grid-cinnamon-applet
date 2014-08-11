@@ -179,7 +179,6 @@ MyApplet.prototype = {
     },
 
     rebuildWorkspaceSwitcher: function() {
-        this.reload_stylesheet();
         this.actor.destroy_all_children();
 
         if (this.numRows > 1) {
@@ -232,23 +231,6 @@ MyApplet.prototype = {
             this.row_indicator.queue_repaint();
     },
     
-    reload_stylesheet: function() {
-        let applet_dir = imports.ui.appletManager._find_applet('workspace-grid@hernejj');
-        let themeContext = St.ThemeContext.get_for_stage(global.stage);
-        let theme = themeContext.get_theme();
-        let stylesheetFile = applet_dir.get_child('stylesheet.css');
-
-        if (stylesheetFile.query_exists(null)) {
-            try {
-                global.log('workspace-grid@hernejj: reloading css from file: ' + stylesheetFile.get_path());
-                theme.load_stylesheet(stylesheetFile.get_path());
-            } catch (e) {
-                global.logError('workspace-grid@hernejj: stylesheet parse error: ' + e);
-                return null;
-            }
-        }
-    },
-    
     draw_row_indicator: function(area) {
         let [width, height] = area.get_surface_size();
         let themeNode = this.row_indicator.get_theme_node();
@@ -273,7 +255,7 @@ MyApplet.prototype = {
     },
     
     determine_active_color: function() {
-        // We want ot take active color info from one of the unselected workspace buttons
+        // We want to take active color info from one of the unselected workspace buttons
         // so find an unslected workspace button
         let selected_idx = global.screen.get_active_workspace_index();
         let unselected_idx = 0;
@@ -285,7 +267,7 @@ MyApplet.prototype = {
     },
     
     determine_inactive_color: function() {
-        // We want ot take active color info from one of the unselected workspace buttons
+        // We want to take active color info from one of the unselected workspace buttons
         // so find an unslected workspace button
         let selected_idx = global.screen.get_active_workspace_index();
         let unselected_idx = 0;
