@@ -62,6 +62,9 @@ switcher to navigate directly to a specific workspace or row.
 You can also place your mouse over the switcher and use the scroll wheel to
 navigate forward and backward in the workspace grid.
 
+By default, this applet conflicts with and disables the Expo and Scale keyboard
+shortcuts. There is a setting in the settings dialog to disable this behavior.
+
 License
 -----------
 This application is released under the GNU General Public License v2. A full
