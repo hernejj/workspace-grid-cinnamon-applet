@@ -228,9 +228,20 @@ MyApplet.prototype = {
         let cr = area.get_context();
         
         let base_color = this.get_base_color()
-        let active_color = base_color.lighten();
-        let inactive_color = base_color.darken();
+        let active_color = null;
+        let inactive_color = null;
         
+        if (this.is_theme_light_on_dark()) {
+            global.logError('LIGHT on DARK');
+            active_color = base_color.lighten();
+            inactive_color = base_color.darken();
+        }
+        else {
+            global.logError('DARK on LIGHT');
+            active_color = base_color.darken().darken();
+            inactive_color = base_color.lighten().lighten();
+        }
+           
         let active = global.screen.get_active_workspace_index();
         let active_row = Math.floor(active/this.numCols);
 
@@ -244,6 +255,19 @@ MyApplet.prototype = {
             cr.setLineWidth(2.0);
             cr.stroke();
         }
+    },
+    
+    is_theme_light_on_dark: function() {
+        let selected_idx = global.screen.get_active_workspace_index();
+        let unselected_idx = 0;
+        if (unselected_idx == selected_idx) unselected_idx = 1;
+        
+        let selected_txt_color = this.button[selected_idx].get_theme_node().get_color('color');
+        let unselected_txt_color = this.button[unselected_idx].get_theme_node().get_color('color');
+
+        let sel_avg = (selected_txt_color.red + selected_txt_color.green + selected_txt_color.blue)/3;
+        let unsel_avg = (unselected_txt_color.red + unselected_txt_color.green + unselected_txt_color.blue)/3;
+        return (sel_avg < unsel_avg);
     },
     
     // All colors we use in this applet are based on this theme defined color.
