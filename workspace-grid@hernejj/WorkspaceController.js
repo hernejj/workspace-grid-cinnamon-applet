@@ -33,6 +33,11 @@ WorkspaceController.prototype = {
                 global.screen.remove_workspace(ws, global.get_current_time());
             }
         }
+    },
+    
+    // This applet is going away. Revert to allowing Cinnamon to control workspaces.
+    release_control: function() {
+        this.set_workspace_grid(-1, 1); // Set to no rows, and a single desktop
     }
 };
 

@@ -83,7 +83,7 @@ MyApplet.prototype = {
             this.onPanelEditModeChanged();
                         
             this.actor.connect('scroll-event', Lang.bind(this,this.onAppletScrollWheel));
-            global.screen.connect('notify::n-workspaces', Lang.bind(this, this.numDesktopsChanged));
+            this.onNumWorkspacesChangedID = global.screen.connect('notify::n-workspaces', Lang.bind(this, this.numWorkspacesChanged));
             this.enable_numDesktopsChanged = true;
             
             global.settings.connect('changed::panel-edit-mode', Lang.bind(this, this.onPanelEditModeChanged));  
@@ -99,14 +99,13 @@ MyApplet.prototype = {
     },
 
     on_applet_removed_from_panel: function() {
-        this.enable_numDesktopsChanged = false;
-        this.wscon.set_workspace_grid(-1, 1);
-        this.enable_numDesktopsChanged = true;
+        global.screen.disconnect(this.onNumWorkspacesChangedID));
+        this.wscon.release_control();
         deregisterKeyBindings();
     },
     
     onKeyBindingChanged: function() {
-        registerKeyBindings(this.registerUpDownKeyBindings)
+        registerKeyBindings(this.registerUpDownKeyBindings);
     },
     
     onUpdateNumberOfWorkspaces: function() {
