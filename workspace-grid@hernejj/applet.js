@@ -79,7 +79,7 @@ MyApplet.prototype = {
             this.onPanelEditModeChanged();
                         
             this.actor.connect('scroll-event', Lang.bind(this,this.onAppletScrollWheel));
-            global.screen.connect('notify::n-workspaces', Lang.bind(this, this.rebuildWorkspaceSwitcher));
+            global.screen.connect('notify::n-workspaces', Lang.bind(this, this.numDesktopsChanged));
             global.settings.connect('changed::panel-edit-mode', Lang.bind(this, this.onPanelEditModeChanged));  
             global.window_manager.connect('switch-workspace', Lang.bind(this, this.updateWorkspaceSwitcher));
         }
@@ -124,9 +124,19 @@ MyApplet.prototype = {
     },
     
     onUpdateNumberOfWorkspaces: function() {
-        this.set_workspace_grid(this.numCols, -1);
+        this.set_workspace_grid(this.numCols, this.numRows);
     },
     
+    numDesktopsChanged: function() {
+        // If this desktop was added external to this applet, then numRows and numCols
+        // are not updated to reflect it's existence. This is bad! We can detect this case
+        // and correct it by removing the additional desktop
+        if (this.numRows*this.numCols < global.screen.n_workspaces)
+            this.equalize_num_workspaces();
+
+        this.rebuildWorkspaceSwitcher();
+    },
+ 
     onPanelEditModeChanged: function() {
         let reactive = !global.settings.get_boolean('panel-edit-mode');
         for (let i=0; i < this.button.length; ++i)

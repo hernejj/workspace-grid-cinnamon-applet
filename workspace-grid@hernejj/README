@@ -76,13 +76,14 @@ Change Log
 v0.6:
     - Remove reliance on external stylesheet and performance limiting hack
     - Applet colors now based on Cinnamon theme
+    - Bugfix: Watch for and remove any externally added desktops
 v0.5:
     - Added support for Cinnamon Settings API.
     - Added option to keep original scale/expo keyboard shortcuts
     - Removed hackish "configuration icon".
     - Removed old style key binding registration. Breaks on very old distros.
 v0.4:
-    - compat: Remove right-click to configure for Cinnamon 2.2 compatability
+    - compat: Remove right-click to configure for Cinnamon 2.2 compatibility
     - Compat: Add configuration via left-click on new icon.
     - Don't override theme style for better theme integration.
     - Workaround for "theme change makes row indicator disappear" bug.
