@@ -1,3 +1,4 @@
+const Lang = imports.lang;
 const Meta = imports.gi.Meta;
 
 function WorkspaceController(cols, rows) {
@@ -8,6 +9,7 @@ WorkspaceController.prototype = {
     
     _init: function(cols, rows) {
         this.set_workspace_grid(cols, rows);
+        this.onNumWorkspacesChangedID = global.screen.connect('notify::n-workspaces', Lang.bind(this, this.numWorkspacesChanged));
     },
      
     // Create proper workspace layout geometry within Gnome
@@ -35,8 +37,18 @@ WorkspaceController.prototype = {
         }
     },
     
+    numWorkspacesChanged: function() {
+        // If this desktop was added external to this applet, then numRows and numCols
+        // are not updated to reflect its existence. This is bad! We can detect this case
+        // and correct it by removing the additional desktop
+        if (this.rows*this.cols < global.screen.n_workspaces) {
+            this.__equalize_num_workspaces();
+        }
+    },
+    
     // This applet is going away. Revert to allowing Cinnamon to control workspaces.
     release_control: function() {
+        global.screen.disconnect(this.onNumWorkspacesChangedID);
         this.set_workspace_grid(-1, 1); // Set to no rows, and a single desktop
     }
 };

@@ -78,14 +78,10 @@ MyApplet.prototype = {
             this.settings.bindProperty(Settings.BindingDirection.IN, "registerUpDownKeyBindings", "registerUpDownKeyBindings", this.onKeyBindingChanged, null);
             
             this.wscon = new WorkspaceController.WorkspaceController(this.numCols, this.numRows);
-            
             this.rebuildWorkspaceSwitcher();
             this.onPanelEditModeChanged();
                         
             this.actor.connect('scroll-event', Lang.bind(this,this.onAppletScrollWheel));
-            this.onNumWorkspacesChangedID = global.screen.connect('notify::n-workspaces', Lang.bind(this, this.numDesktopsChanged));
-            this.enable_numDesktopsChanged = true;
-            
             global.settings.connect('changed::panel-edit-mode', Lang.bind(this, this.onPanelEditModeChanged));  
             global.window_manager.connect('switch-workspace', Lang.bind(this, this.updateWorkspaceSwitcher));
         }
@@ -99,7 +95,6 @@ MyApplet.prototype = {
     },
 
     on_applet_removed_from_panel: function() {
-        global.screen.disconnect(this.onNumWorkspacesChangedID);
         this.wscon.release_control();
         deregisterKeyBindings();
     },
@@ -107,27 +102,12 @@ MyApplet.prototype = {
     onKeyBindingChanged: function() {
         registerKeyBindings(this.registerUpDownKeyBindings);
     },
-    
-    onUpdateNumberOfWorkspaces: function() {
-        this.enable_numDesktopsChanged = false;
-        this.wscon.set_workspace_grid(this.numCols, this.numRows);
-        this.enable_numDesktopsChanged = true;
-        this.rebuildWorkspaceSwitcher();
-    },
-    
-    numDesktopsChanged: function() {
-        // If this desktop was added external to this applet, then numRows and numCols
-        // are not updated to reflect its existence. This is bad! We can detect this case
-        // and correct it by removing the additional desktop
-        if (this.numRows*this.numCols < global.screen.n_workspaces && this.enable_numDesktopsChanged ) {
-            this.enable_numDesktopsChanged = false;
-            this.wscon.__equalize_num_workspaces();
-            this.enable_numDesktopsChanged = true;
-        }
 
+    onUpdateNumberOfWorkspaces: function() {
+        this.wscon.set_workspace_grid(this.numCols, this.numRows);
         this.rebuildWorkspaceSwitcher();
     },
- 
+
     onPanelEditModeChanged: function() {
         let reactive = !global.settings.get_boolean('panel-edit-mode');
         for (let i=0; i < this.button.length; ++i)
