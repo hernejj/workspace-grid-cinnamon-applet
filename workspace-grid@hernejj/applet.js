@@ -83,7 +83,7 @@ MyApplet.prototype = {
             this.onPanelEditModeChanged();
                         
             this.actor.connect('scroll-event', Lang.bind(this,this.onAppletScrollWheel));
-            this.onNumWorkspacesChangedID = global.screen.connect('notify::n-workspaces', Lang.bind(this, this.numWorkspacesChanged));
+            this.onNumWorkspacesChangedID = global.screen.connect('notify::n-workspaces', Lang.bind(this, this.numDesktopsChanged));
             this.enable_numDesktopsChanged = true;
             
             global.settings.connect('changed::panel-edit-mode', Lang.bind(this, this.onPanelEditModeChanged));  
