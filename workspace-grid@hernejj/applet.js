@@ -95,9 +95,6 @@ MyApplet.prototype = {
     },
     
     on_applet_added_to_panel: function () {
-        this.enable_numDesktopsChanged = false;
-        this.wscon.set_workspace_grid(this.numCols, this.numRows);
-        this.enable_numDesktopsChanged = true;
         registerKeyBindings(this.registerUpDownKeyBindings);
     },
 
