@@ -116,6 +116,7 @@ MyApplet.prototype = {
         this.enable_numDesktopsChanged = false;
         this.wscon.set_workspace_grid(this.numCols, this.numRows);
         this.enable_numDesktopsChanged = true;
+        this.rebuildWorkspaceSwitcher();
     },
     
     numDesktopsChanged: function() {
