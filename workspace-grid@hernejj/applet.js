@@ -124,7 +124,6 @@ MyApplet.prototype = {
         // are not updated to reflect its existence. This is bad! We can detect this case
         // and correct it by removing the additional desktop
         if (this.numRows*this.numCols < global.screen.n_workspaces && this.enable_numDesktopsChanged ) {
-            global.logError("workspace-grid@hernejj .............. DAMN ................");
             this.enable_numDesktopsChanged = false;
             this.wscon.__equalize_num_workspaces();
             this.enable_numDesktopsChanged = true;
