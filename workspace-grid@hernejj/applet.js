@@ -12,6 +12,8 @@ const Settings = imports.ui.settings;
 const Clutter = imports.gi.Clutter;
 const Meta = imports.gi.Meta;
 const Main = imports.ui.main;
+const AppletDir = imports.ui.appletManager.applets['workspace-grid@hernejj'];
+const WorkspaceController = AppletDir.WorkspaceController
 
 function registerKeyBindings(registerUpDownKeyBindings) {
     try {
@@ -75,11 +77,15 @@ MyApplet.prototype = {
             this.settings.bindProperty(Settings.BindingDirection.IN, "numRows", "numRows", this.onUpdateNumberOfWorkspaces, null);
             this.settings.bindProperty(Settings.BindingDirection.IN, "registerUpDownKeyBindings", "registerUpDownKeyBindings", this.onKeyBindingChanged, null);
             
+            this.wscon = new WorkspaceController.WorkspaceController(this.numCols, this.numRows);
+            
             this.rebuildWorkspaceSwitcher();
             this.onPanelEditModeChanged();
                         
             this.actor.connect('scroll-event', Lang.bind(this,this.onAppletScrollWheel));
             global.screen.connect('notify::n-workspaces', Lang.bind(this, this.numDesktopsChanged));
+            this.enable_numDesktopsChanged = true;
+            
             global.settings.connect('changed::panel-edit-mode', Lang.bind(this, this.onPanelEditModeChanged));  
             global.window_manager.connect('switch-workspace', Lang.bind(this, this.updateWorkspaceSwitcher));
         }
@@ -88,34 +94,17 @@ MyApplet.prototype = {
         }
     },
     
-    set_workspace_grid: function (cols, rows) {
-        this.equalize_num_workspaces();
-        global.screen.override_workspace_layout(Meta.ScreenCorner.TOPLEFT, false, rows, cols);
-    },
-
-    equalize_num_workspaces: function() {
-        let new_ws_count = this.numRows * this.numCols;
-        let old_ws_count = global.screen.n_workspaces;
-        
-        if (new_ws_count > old_ws_count) {
-            for (let i=old_ws_count; i<new_ws_count; i++)
-                global.screen.append_new_workspace(false, global.get_current_time());
-        }
-        else if (new_ws_count < old_ws_count) {
-            for (let i=old_ws_count; i>new_ws_count; i--) {
-                let ws = global.screen.get_workspace_by_index( global.screen.n_workspaces-1 );
-                global.screen.remove_workspace(ws, global.get_current_time());
-            }
-        }
-    },
-    
     on_applet_added_to_panel: function () {
-        this.set_workspace_grid(this.numCols, this.numRows);
+        this.enable_numDesktopsChanged = false;
+        this.wscon.set_workspace_grid(this.numCols, this.numRows);
+        this.enable_numDesktopsChanged = true;
         registerKeyBindings(this.registerUpDownKeyBindings);
     },
 
     on_applet_removed_from_panel: function() {
-        this.set_workspace_grid(-1, 1);
+        this.enable_numDesktopsChanged = false;
+        this.wscon.set_workspace_grid(-1, 1);
+        this.enable_numDesktopsChanged = true;
         deregisterKeyBindings();
     },
     
@@ -124,15 +113,21 @@ MyApplet.prototype = {
     },
     
     onUpdateNumberOfWorkspaces: function() {
-        this.set_workspace_grid(this.numCols, this.numRows);
+        this.enable_numDesktopsChanged = false;
+        this.wscon.set_workspace_grid(this.numCols, this.numRows);
+        this.enable_numDesktopsChanged = true;
     },
     
     numDesktopsChanged: function() {
         // If this desktop was added external to this applet, then numRows and numCols
-        // are not updated to reflect it's existence. This is bad! We can detect this case
+        // are not updated to reflect its existence. This is bad! We can detect this case
         // and correct it by removing the additional desktop
-        if (this.numRows*this.numCols < global.screen.n_workspaces)
-            this.equalize_num_workspaces();
+        if (this.numRows*this.numCols < global.screen.n_workspaces && this.enable_numDesktopsChanged ) {
+            global.logError("workspace-grid@hernejj .............. DAMN ................");
+            this.enable_numDesktopsChanged = false;
+            this.wscon.__equalize_num_workspaces();
+            this.enable_numDesktopsChanged = true;
+        }
 
         this.rebuildWorkspaceSwitcher();
     },
