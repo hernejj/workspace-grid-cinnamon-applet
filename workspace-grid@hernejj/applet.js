@@ -99,7 +99,7 @@ MyApplet.prototype = {
     },
 
     on_applet_removed_from_panel: function() {
-        global.screen.disconnect(this.onNumWorkspacesChangedID));
+        global.screen.disconnect(this.onNumWorkspacesChangedID);
         this.wscon.release_control();
         deregisterKeyBindings();
     },
