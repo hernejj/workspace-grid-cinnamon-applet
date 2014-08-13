@@ -55,8 +55,8 @@ BarIndicatorStyle.prototype = {
         global.screen.get_workspace_by_index(actor.index).activate(global.get_current_time());
     },
     
-    // FIXME: apply to row indicator too
     setReactivity: function(reactive) {
+        this.row_indicator.reactive = reactive;
         for (let i=0; i < this.button.length; ++i)
             this.button[i].reactive = reactive;            
     }, 
