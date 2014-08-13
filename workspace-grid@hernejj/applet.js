@@ -81,8 +81,6 @@ MyApplet.prototype = {
             this.ui = new BarIndicatorStyle.BarIndicatorStyle(this, this.numCols, this.numRows, this._panelHeight);
 
             this.onPanelEditModeChanged();
-                        
-            this.actor.connect('scroll-event', Lang.bind(this,this.onAppletScrollWheel));
             global.settings.connect('changed::panel-edit-mode', Lang.bind(this, this.onPanelEditModeChanged));  
         }
         catch (e) {
@@ -112,16 +110,6 @@ MyApplet.prototype = {
         this.ui.setReactivity(!global.settings.get_boolean('panel-edit-mode'));
     }, 
     
-    onAppletScrollWheel: function(actor, event){
-        var idx = global.screen.get_active_workspace_index();
-
-        if (event.get_scroll_direction() == 0) idx--; 
-        else if (event.get_scroll_direction() == 1) idx++;
-        
-        if(global.screen.get_workspace_by_index(idx) != null)
-                global.screen.get_workspace_by_index(idx).activate(global.get_current_time());
-    },
-
     on_panel_height_changed: function() {
         this.ui.update_grid(this.numCols, this.numRows, this._panelHeight);
     },

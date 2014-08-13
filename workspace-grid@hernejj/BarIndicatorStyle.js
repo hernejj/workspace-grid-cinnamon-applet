@@ -13,6 +13,7 @@ BarIndicatorStyle.prototype = {
         this.button = [];
         this.update_grid(cols, rows, height);
         global.window_manager.connect('switch-workspace', Lang.bind(this, this.update));
+        this.applet.actor.connect('scroll-event', Lang.bind(this,this.onMouseScroll));
     },
     
     update_grid: function(cols, rows, height) {
@@ -22,7 +23,7 @@ BarIndicatorStyle.prototype = {
         this.rebuild();
     },
     
-    onAppletScrollWheel: function(actor, event){
+    onMouseScroll: function(actor, event){
         var idx = global.screen.get_active_workspace_index();
 
         if (event.get_scroll_direction() == 0) idx--; 
