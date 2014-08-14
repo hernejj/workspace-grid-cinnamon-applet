@@ -76,11 +76,11 @@ MyApplet.prototype = {
             this.settings = new Settings.AppletSettings(this, "workspace-grid@hernejj", instanceId);
             this.settings.bindProperty(Settings.BindingDirection.IN, "numCols", "numCols", this.onUpdateNumberOfWorkspaces, null);
             this.settings.bindProperty(Settings.BindingDirection.IN, "numRows", "numRows", this.onUpdateNumberOfWorkspaces, null);
+            this.settings.bindProperty(Settings.BindingDirection.IN, "style", "style", this.onUpdateStyle, null);
             this.settings.bindProperty(Settings.BindingDirection.IN, "registerUpDownKeyBindings", "registerUpDownKeyBindings", this.onKeyBindingChanged, null);
             
             this.wscon = new WorkspaceController.WorkspaceController(this.numCols, this.numRows);
-            //this.ui = new BarIndicatorStyle.BarIndicatorStyle(this, this.numCols, this.numRows, this._panelHeight);
-            this.ui = new GridStyle.GridStyle(this, this.numCols, this.numRows, this._panelHeight);
+            this.onUpdateStyle();
             
             this.onPanelEditModeChanged();
             global.settings.connect('changed::panel-edit-mode', Lang.bind(this, this.onPanelEditModeChanged));  
@@ -106,6 +106,13 @@ MyApplet.prototype = {
     onUpdateNumberOfWorkspaces: function() {
         this.wscon.set_workspace_grid(this.numCols, this.numRows);
         this.ui.update_grid(this.numCols, this.numRows, this._panelHeight)
+    },
+    
+    onUpdateStyle: function() {
+        if (this.style == 'single-row')
+            this.ui = new BarIndicatorStyle.BarIndicatorStyle(this, this.numCols, this.numRows, this._panelHeight);
+        else
+            this.ui = new GridStyle.GridStyle(this, this.numCols, this.numRows, this._panelHeight);
     },
 
     onPanelEditModeChanged: function() {

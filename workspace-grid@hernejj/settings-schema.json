@@ -3,7 +3,7 @@
     "type": "spinbutton",
     "default" : 2,
     "min" : 1,
-    "max" : 6,
+    "max" : 12,
     "step" : 1,
     "units" : "desktops",
     "description" : "Number of columns:"
@@ -17,6 +17,15 @@
     "units" : "desktops",
     "description" : "Number of rows:"
  },
+ "style": {
+    "type": "combobox",
+    "description": "Style:",
+    "default": "single-row",
+    "options": {
+        "Single Row": "single-row",
+        "Grid": "grid"
+    }
+},
  "registerUpDownKeyBindings" : {
     "type" : "checkbox",
     "default" : true,
