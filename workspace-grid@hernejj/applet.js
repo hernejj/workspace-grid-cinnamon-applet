@@ -13,8 +13,9 @@ const Clutter = imports.gi.Clutter;
 const Meta = imports.gi.Meta;
 const Main = imports.ui.main;
 const AppletDir = imports.ui.appletManager.applets['workspace-grid@hernejj'];
-const WorkspaceController = AppletDir.WorkspaceController
-const BarIndicatorStyle = AppletDir.BarIndicatorStyle
+const WorkspaceController = AppletDir.WorkspaceController;
+const BarIndicatorStyle = AppletDir.BarIndicatorStyle;
+const GridStyle = AppletDir.GridStyle;
 
 function registerKeyBindings(registerUpDownKeyBindings) {
     try {
@@ -78,8 +79,9 @@ MyApplet.prototype = {
             this.settings.bindProperty(Settings.BindingDirection.IN, "registerUpDownKeyBindings", "registerUpDownKeyBindings", this.onKeyBindingChanged, null);
             
             this.wscon = new WorkspaceController.WorkspaceController(this.numCols, this.numRows);
-            this.ui = new BarIndicatorStyle.BarIndicatorStyle(this, this.numCols, this.numRows, this._panelHeight);
-
+            //this.ui = new BarIndicatorStyle.BarIndicatorStyle(this, this.numCols, this.numRows, this._panelHeight);
+            this.ui = new GridStyle.GridStyle(this, this.numCols, this.numRows, this._panelHeight);
+            
             this.onPanelEditModeChanged();
             global.settings.connect('changed::panel-edit-mode', Lang.bind(this, this.onPanelEditModeChanged));  
         }

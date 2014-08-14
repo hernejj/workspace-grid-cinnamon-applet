@@ -74,6 +74,7 @@ Thank you for using free software!
 Change Log
 -----------
 v0.6:
+    - Multiple visual styles to choose from: single row and grid
     - Remove reliance on external stylesheet and performance limiting hack
     - Applet colors now based on Cinnamon theme
     - Bugfix: Watch for and remove any externally added desktops
