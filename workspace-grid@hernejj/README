@@ -77,7 +77,7 @@ v0.6:
     - Multiple visual styles to choose from: single row and grid
     - Remove reliance on external stylesheet and performance limiting hack
     - Applet colors now based on Cinnamon theme
-    - Bugfix: Watch for and remove any externally added desktops
+    - Bugfix: Watch for and correct any externally added/removed desktops
 v0.5:
     - Added support for Cinnamon Settings API.
     - Added option to keep original scale/expo keyboard shortcuts
