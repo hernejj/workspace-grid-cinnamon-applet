@@ -44,7 +44,18 @@ Setting the Number of Workspaces
 This applet allows you to configure the number or rows and columns in your
 workspace grid.  Just right click on the applet and choose "Configure..."
 and a dialog will appear. Enter the number of columns and rows you want and
-click the close button.
+click the close button. The maximum number of workspaces supported by this
+applet is 12 columns by 6 rows.
+
+Choosing the Style
+-------------------
+There are currently two visual styles to choose from.
+
+Single Row: Workspaces are shown to you a single row at a time. A Row indicator
+is present to let you know what row you are in.
+
+Grid: A grid view of all existing workspaces. The workspaces in this style can
+get quite small if you have more than a few rows.
 
 Navigating
 -----------
@@ -75,6 +86,7 @@ Change Log
 -----------
 v0.6:
     - Multiple visual styles to choose from: single row and grid
+    - Maximum number of columns increased from 6 to 12.
     - Remove reliance on external stylesheet and performance limiting hack
     - Applet colors now based on Cinnamon theme
     - Bugfix: Watch for and correct any externally added/removed desktops
