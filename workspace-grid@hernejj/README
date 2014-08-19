@@ -89,6 +89,7 @@ Thank you for using free software!
 Change Log
 -----------
 v0.7:
+    - Added setting to choose direction to move when using mouse wheel
     - Bugfix: Stop trying to handle externally +/- desktops. Was broken!
     - Bugfix: Deregister event handlers when switching ui styles
 v0.6:

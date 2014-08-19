@@ -9,6 +9,7 @@ function GridStyle(applet, cols, rows, height) {
 GridStyle.prototype = {
     
     _init: function(applet, cols, rows, height) {
+        this.scrollby = 'col';
         this.applet = applet;
         this.button = [];
         this.update_grid(cols, rows, height);
@@ -30,10 +31,48 @@ GridStyle.prototype = {
     },
     
     onMouseScroll: function(actor, event){
+        if (this.scrollby == 'row')
+            this.scrollByRow(event);
+        else
+            this.scrollByCol(event);
+    },
+    
+    scrollByCol: function(event) {
         var idx = global.screen.get_active_workspace_index();
-
+        
         if (event.get_scroll_direction() == 0) idx--; 
         else if (event.get_scroll_direction() == 1) idx++;
+        
+        if(global.screen.get_workspace_by_index(idx) != null)
+            global.screen.get_workspace_by_index(idx).activate(global.get_current_time());
+    },
+    
+    scrollByRow: function(event) {
+        var idx = global.screen.get_active_workspace_index();
+        var numworkspaces = this.rows * this.cols;
+        
+        var row = Math.floor(idx/this.cols);
+        var col = idx % this.rows;
+        
+        if (event.get_scroll_direction() == 0) {
+            row--;
+            if (row < 0) {
+                row=this.rows-1;
+                col--;
+            }
+        }
+        else if (event.get_scroll_direction() == 1) {
+            row++;
+            if (row >= this.rows) {
+                row=0;
+                col++;
+            }
+        }
+        
+        if (col < 0 || col >= this.cols)
+            return;
+        
+        idx = row*this.cols + col;
         
         if(global.screen.get_workspace_by_index(idx) != null)
             global.screen.get_workspace_by_index(idx).activate(global.get_current_time());

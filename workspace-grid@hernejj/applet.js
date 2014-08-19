@@ -78,6 +78,7 @@ MyApplet.prototype = {
             this.settings.bindProperty(Settings.BindingDirection.IN, "numRows", "numRows", this.onUpdateNumberOfWorkspaces, null);
             this.settings.bindProperty(Settings.BindingDirection.IN, "style", "style", this.onUpdateStyle, null);
             this.settings.bindProperty(Settings.BindingDirection.IN, "registerUpDownKeyBindings", "registerUpDownKeyBindings", this.onKeyBindingChanged, null);
+            this.settings.bindProperty(Settings.BindingDirection.IN, "scrollWheelBehavior", "scrollWheelBehavior", this.onUpdateScrollWheelBehavior, null);
             
             this.wscon = new WorkspaceController.WorkspaceController(this.numCols, this.numRows);
             this.onUpdateStyle();
@@ -114,6 +115,11 @@ MyApplet.prototype = {
             this.ui = new BarIndicatorStyle.BarIndicatorStyle(this, this.numCols, this.numRows, this._panelHeight);
         else
             this.ui = new GridStyle.GridStyle(this, this.numCols, this.numRows, this._panelHeight);
+        this.onUpdateScrollWheelBehavior();
+    },
+    
+    onUpdateScrollWheelBehavior: function() {
+        this.ui.scrollby = this.scrollWheelBehavior;
     },
 
     onPanelEditModeChanged: function() {

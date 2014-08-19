@@ -31,5 +31,15 @@
     "default" : true,
     "description": "Use Keyboard shortcuts (Ctrl+Alt+Up/Down) to switch desktop rows",
     "tooltip": "This prevents the use of the Expo and Scale keyboard shortcuts in Cinnamon"
- }
+ },
+ "scrollWheelBehavior": {
+    "type": "combobox",
+    "description": "Scroll Wheel Behavior:",
+    "default": "col",
+    "options": {
+        "Scroll By Column": "col",
+        "Scroll By Row": "row"
+    }
+  }
 }
+
