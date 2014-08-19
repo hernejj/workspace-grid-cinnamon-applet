@@ -109,6 +109,7 @@ MyApplet.prototype = {
     },
     
     onUpdateStyle: function() {
+        if (this.ui) this.ui.cleanup();
         if (this.style == 'single-row')
             this.ui = new BarIndicatorStyle.BarIndicatorStyle(this, this.numCols, this.numRows, this._panelHeight);
         else

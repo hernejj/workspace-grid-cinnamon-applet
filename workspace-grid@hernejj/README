@@ -90,6 +90,7 @@ Change Log
 -----------
 v0.7:
     - Bugfix: Stop trying to handle externally +/- desktops. Was broken!
+    - Bugfix: Deregister event handlers when switching ui styles
 v0.6:
     - Multiple visual styles to choose from: single row and grid
     - Maximum number of columns increased from 6 to 12.

@@ -12,8 +12,14 @@ GridStyle.prototype = {
         this.applet = applet;
         this.button = [];
         this.update_grid(cols, rows, height);
-        global.window_manager.connect('switch-workspace', Lang.bind(this, this.update));
-        this.applet.actor.connect('scroll-event', Lang.bind(this,this.onMouseScroll));
+        this.event_handlers = [];
+        this.switch_id = global.window_manager.connect('switch-workspace', Lang.bind(this, this.update));
+        this.scroll_id = this.applet.actor.connect('scroll-event', Lang.bind(this,this.onMouseScroll));
+    },
+    
+    cleanup: function() {
+        global.window_manager.disconnect(this.switch_id);
+        this.applet.actor.disconnect(this.scroll_id);
     },
     
     update_grid: function(cols, rows, height) {
