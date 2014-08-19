@@ -50,7 +50,6 @@ GridStyle.prototype = {
         
         btn_height = this.height/this.rows;
         this.button = [];
-        global.log("cols and rows = " + this.cols + " " + this.rows);
         for(let r=0; r < this.rows; r++) {
             for(let c=0; c < this.cols; c++) {
                 let i = (r*this.cols)+c;

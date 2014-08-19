@@ -71,7 +71,7 @@ MyApplet.prototype = {
         this.metadata = metadata;
         
         try {
-            global.log("workspace-grid@hernejj: v0.6");
+            global.log("workspace-grid@hernejj: v0.7");
             this.actor.set_style_class_name("workspace-switcher-box");
             this.settings = new Settings.AppletSettings(this, "workspace-grid@hernejj", instanceId);
             this.settings.bindProperty(Settings.BindingDirection.IN, "numCols", "numCols", this.onUpdateNumberOfWorkspaces, null);

@@ -1,4 +1,4 @@
-Workspace grid (2D) and switcher  v0.6
+Workspace grid (2D) and switcher  v0.7
 ========================================
 2D workspace grid and switcher for Cinnamon Desktop Environment
 
@@ -76,6 +76,10 @@ navigate forward and backward in the workspace grid.
 By default, this applet conflicts with and disables the Expo and Scale keyboard
 shortcuts. There is a setting in the settings dialog to disable this behavior.
 
+WARNING: Using Expo (or anything other than this applet) for adding/removing
+workspaces will cause Cinnamon to crash! While using this applet ONLY add/remove
+desktops via the applet's settings window.
+
 License
 -----------
 This application is released under the GNU General Public License v2. A full
@@ -84,6 +88,8 @@ Thank you for using free software!
 
 Change Log
 -----------
+v0.7:
+    - Bugfix: Stop trying to handle externally +/- desktops. Was broken!
 v0.6:
     - Multiple visual styles to choose from: single row and grid
     - Maximum number of columns increased from 6 to 12.

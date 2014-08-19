@@ -96,6 +96,14 @@ BarIndicatorStyle.prototype = {
         let low = (active_row)*this.cols;
         let high = low + this.cols;
         
+        // If the user added or removed workspaces external to this applet then
+        // we could end up with a selected workspaces that is out of bounds. Just
+        // revert to displaying the last row in that case.
+        if (active_ws >= nworks) {
+            high = nworks - 1;
+            low = high - this.cols;
+        }
+        
         for (let i=0; i < nworks; ++i) {
             if (i >= low && i < high) this.button[i].show();
             else this.button[i].hide();
@@ -135,6 +143,9 @@ BarIndicatorStyle.prototype = {
            
         let active = global.screen.get_active_workspace_index();
         let active_row = Math.floor(active/this.cols);
+        
+        // Catch overflow due to externally added/removed workspaces
+        if (active >= this.button.length) active_row = (this.button.length-1) /this.cols;
 
         for ( let i=0; i < this.rows; ++i ) {
             let y = (i+1)*height/(this.rows+1);
