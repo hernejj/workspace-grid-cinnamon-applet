@@ -50,7 +50,7 @@ BarIndicatorStyle.prototype = {
         var numworkspaces = this.rows * this.cols;
         
         var row = Math.floor(idx/this.cols);
-        var col = idx % this.rows;
+        var col = idx % this.cols;
         
         if (event.get_scroll_direction() == 0) {
             row--;

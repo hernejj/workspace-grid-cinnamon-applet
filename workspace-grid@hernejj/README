@@ -1,4 +1,4 @@
-Workspace grid (2D) and switcher  v0.7
+Workspace grid (2D) and switcher  v0.8
 ========================================
 2D workspace grid and switcher for Cinnamon Desktop Environment
 
@@ -88,6 +88,8 @@ Thank you for using free software!
 
 Change Log
 -----------
+v0.8:
+    - Bugfix: Fixed mouse scrolling when scrolling by column.
 v0.7:
     - Added setting to choose direction to move when using mouse wheel
     - Bugfix: Stop trying to handle externally +/- desktops. Was broken!
